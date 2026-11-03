@@ -1,0 +1,1641 @@
+<!-- Updated with sci-fi typography, persistent theme/language controls, RTL support, and accessible motion. -->
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <meta
+        name="description"
+        content="Smart Land - AI Systems, Technology Consulting and Custom Software Development."
+    >
+    <title>Smart Land | AI Systems & Digital Solutions</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Rajdhani:wght@400;500;600;700&family=Tajawal:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet"
+    >
+
+    <!-- Language resources and Tailwind configuration -->
+    <script src="en.js"></script>
+    <script src="ar.js"></script>
+    <script src="code.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- css -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Keep supplied artwork at its native resolution; styles remain in this HTML file. -->
+    <style>
+        /* Logical positioning keeps the fixed header full-width in both directions. */
+        header.site-header { inset-inline: 0; width: 100%; }
+        .site-header .header-layout {
+            display: grid; grid-template-columns: minmax(0, 1fr) auto auto;
+            align-items: center; gap: clamp(1rem, 2vw, 2rem); min-height: 5rem;
+        }
+        .site-header .site-brand { min-width: 0; }
+        .site-header .site-brand img { flex-shrink: 0; }
+        .site-header .brand-copy { min-width: 0; }
+        .site-header .brand-copy > span { white-space: nowrap; }
+        .site-header .brand-copy > span:last-child {
+            display: block; max-width: 16rem; overflow: hidden; text-overflow: ellipsis;
+        }
+        .site-header .primary-nav {
+            display: flex; align-items: center; gap: clamp(.75rem, 1.8vw, 2rem);
+        }
+        .site-header .primary-nav a {
+            position: relative; padding-block: .6rem; white-space: nowrap;
+            transition: color 220ms ease, transform 220ms ease;
+        }
+        .site-header .primary-nav a::after {
+            content: ""; position: absolute; inset-inline: 0; bottom: .2rem;
+            height: 2px; background: var(--secondary-ink);
+            transform: scaleX(0); transform-origin: left;
+            transition: transform 220ms ease;
+        }
+        html[dir="rtl"] .site-header .primary-nav a::after { transform-origin: right; }
+        .site-header .primary-nav a:is(:hover, :focus-visible)::after { transform: scaleX(1); }
+        .site-header .header-actions { gap: .75rem; white-space: nowrap; }
+        .site-header .site-toggle { flex-shrink: 0; white-space: nowrap; }
+        /* Include entry-motion distance so anchors stay clear as sections settle. */
+        main section[id] { scroll-margin-top: calc(6rem + 24px); }
+        @media (max-width: 1199px) {
+            .site-header .header-layout {
+                grid-template-columns: minmax(0, 1fr) auto;
+                grid-template-rows: 5rem 2.5rem; height: auto;
+                column-gap: .75rem; row-gap: 0; padding-bottom: .5rem;
+            }
+            .site-header .site-brand { grid-column: 1; grid-row: 1; }
+            .site-header .header-actions { grid-column: 2; grid-row: 1; }
+            .site-header .primary-nav {
+                grid-column: 1 / -1; grid-row: 2; justify-content: center;
+                gap: clamp(.75rem, 4vw, 2rem); min-width: 0;
+            }
+            .site-header .header-cta, .site-header .header-avatar { display: none; }
+            main#home { padding-top: 8rem; }
+            main section[id] { scroll-margin-top: calc(9rem + 24px); }
+        }
+        @media (max-width: 600px) {
+            .site-header .header-layout { padding-inline: 1rem; }
+            .site-header .site-brand { gap: .5rem; }
+            .site-header .site-brand img { height: 2.5rem; }
+            .site-header .brand-copy > span:first-child { font-size: .9rem; }
+            .site-header .brand-copy > span:last-child { max-width: 100%; font-size: .55rem; }
+            .site-header .header-actions { gap: .5rem; }
+            .site-header .primary-nav a { font-size: .8rem; }
+            .site-header #theme-toggle-label {
+                position: absolute; width: 1px; height: 1px; overflow: hidden;
+                clip-path: inset(50%); white-space: nowrap;
+            }
+        }
+        /* Gentle entry motion and color changes reuse the existing scroll observer. */
+        body { transition: background-color 260ms ease, color 260ms ease, opacity 220ms ease; }
+        main section, footer {
+            transition: background-color 260ms ease, color 260ms ease,
+                opacity 520ms ease, transform 520ms cubic-bezier(.2, .7, .2, 1);
+        }
+        main section.reveal-on-scroll, footer.reveal-on-scroll {
+            opacity: 0; transform: translateY(24px);
+            transition: background-color 260ms ease, color 260ms ease,
+                opacity 520ms ease, transform 520ms cubic-bezier(.2, .7, .2, 1);
+        }
+        main section.reveal-on-scroll.is-visible, footer.reveal-on-scroll.is-visible {
+            opacity: 1; transform: translateY(0);
+        }
+        main .portfolio-item {
+            transition: opacity 320ms ease, transform 320ms ease, box-shadow 320ms ease;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            main .portfolio-item:hover { transform: translateY(-4px); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            main section.reveal-on-scroll, main section.reveal-on-scroll.is-visible,
+            footer.reveal-on-scroll, footer.reveal-on-scroll.is-visible {
+                opacity: 1; transform: none;
+            }
+            main .portfolio-item:hover { transform: none; }
+        }
+        main .hero-media-frame {
+            display: grid; grid-template-columns: minmax(0, 512px) minmax(0, 1fr);
+            align-items: center; gap: 2rem; padding: 2rem;
+            aspect-ratio: auto; max-height: none;
+        }
+        main .hero-media-frame > img {
+            width: 100%; height: auto; max-width: 512px; max-height: 286px;
+            object-fit: contain; justify-self: center; transform: none;
+            position: relative; z-index: 1;
+        }
+        main .hero-media-frame > .hero-context {
+            position: relative; inset: auto; max-width: none; z-index: 1;
+        }
+        #portfolio-grid .portfolio-item img {
+            width: 100%; height: 100%; max-width: 512px; max-height: 382px;
+            object-fit: contain; margin-inline: auto; transform: none;
+        }
+        @media (max-width: 900px) {
+            main .hero-media-frame { grid-template-columns: minmax(0, 1fr); padding: 1rem; gap: 1rem; }
+        }
+    </style>
+</head>
+
+<body class="bg-background font-body text-on-surface antialiased selection:bg-primary selection:text-on-primary">
+
+<!-- ========================================================= -->
+<!-- HEADER -->
+<!-- ========================================================= -->
+
+<header
+    class="site-header fixed top-0 z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.4)]"
+>
+    <div class="header-layout h-20 max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between gap-6">
+
+        <!-- Logo -->
+        <a
+            href="#home"
+            class="site-brand flex items-center gap-3 group"
+            aria-label="Smart Land Home"
+            data-i18n-aria="home"
+        >
+            <img
+                src="images/logo.avif"
+                alt="Smart Land Logo"
+                data-i18n-alt="logo"
+                class="h-12 w-auto max-h-12 object-contain rounded transition-transform duration-300 group-hover:scale-105"
+            >
+
+            <div class="brand-copy flex flex-col">
+                <span class="text-lg font-headline font-bold tracking-tight text-on-surface leading-tight"><span data-i18n-key="text-1">
+                    Smart Land
+                </span></span>
+
+                <span class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant"><span data-i18n-key="text-2">
+                    Est. 2011 • AI Systems
+                </span></span>
+            </div>
+        </a>
+
+        <!-- Navigation stays available on desktop, tablet and mobile. -->
+        <nav class="primary-nav hidden lg:flex items-center gap-8">
+
+            <a
+                href="#about"
+                class="text-sm font-label uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors"
+            ><span data-i18n-key="text-3">
+                About Us
+            </span></a>
+
+            <a
+                href="#portfolio"
+                class="text-sm font-label uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors"
+            ><span data-i18n-key="text-4">
+                Portfolio
+            </span></a>
+
+            <a
+                href="#showcase"
+                class="text-sm font-label uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors"
+            ><span data-i18n-key="text-5">
+                Showcase
+            </span></a>
+
+            <a
+                href="#consult"
+                class="text-sm font-label uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors"
+            ><span data-i18n-key="text-6">
+                Contact
+            </span></a>
+
+        </nav>
+
+        <!-- Header Actions -->
+        <div class="header-actions flex items-center gap-4">
+
+            <a
+                href="#consult"
+                class="header-cta relative inline-flex items-center justify-center px-5 py-2.5 text-xs font-label uppercase tracking-wider font-semibold rounded-lg text-primary bg-surface-container-high transition-all duration-300 shadow-[0_0_12px_rgba(255,45,120,0.25)] hover:shadow-[0_0_20px_rgba(255,45,120,0.5)] hover:bg-surface-bright active:scale-95"
+            ><span data-i18n-key="text-7">
+                Launch AI Solution
+            </span></a>
+
+            <div class="flex items-center gap-2" data-i18n-ignore>
+                <button
+                    id="theme-toggle"
+                    type="button"
+                    class="site-toggle"
+                    aria-label="Switch to light theme"
+                    title="Switch to light theme"
+                >
+                    <span class="material-symbols-outlined" aria-hidden="true">light_mode</span>
+                    <span id="theme-toggle-label">Light</span>
+                </button>
+                <button
+                    id="language-toggle"
+                    type="button"
+                    class="site-toggle"
+                    aria-label="Switch language to Arabic"
+                    title="Switch language to Arabic"
+                >
+                    <span id="language-toggle-label">العربية</span>
+                </button>
+            </div>
+
+            <div class="header-avatar w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-on-primary text-[18px]">
+                    person
+                </span>
+            </div>
+
+        </div>
+    </div>
+</header>
+
+
+<!-- ========================================================= -->
+<!-- MAIN -->
+<!-- ========================================================= -->
+
+<main id="home" class="w-full pt-20 bg-background">
+
+<div class="flex flex-col w-full overflow-hidden text-on-surface">
+
+<!-- ========================================================= -->
+<!-- HERO -->
+<!-- ========================================================= -->
+
+<section class="relative w-full pt-12 pb-24 px-6 lg:px-12 max-w-7xl mx-auto">
+
+    <!-- Glow -->
+    <div
+        class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[650px] h-[320px] bg-primary/10 blur-[130px] rounded-full pointer-events-none"
+    ></div>
+
+    <div
+        class="absolute top-1/3 right-10 w-[380px] h-[280px] bg-secondary/10 blur-[120px] rounded-full pointer-events-none"
+    ></div>
+
+    <!-- Hero Content -->
+    <div class="relative flex flex-col items-center text-center max-w-4xl mx-auto space-y-6">
+
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-surface-container-high/80 backdrop-blur-md shadow-[0_0_20px_rgba(0,255,204,0.15)]">
+
+            <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+
+            <span class="text-xs font-label uppercase tracking-widest text-secondary font-semibold"><span data-i18n-key="text-8">
+                TRUSTED SINCE 2011
+            </span></span>
+
+        </div>
+
+        <!-- Heading -->
+        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-headline font-extrabold tracking-tight text-on-surface leading-[1.08]"><span data-i18n-key="text-9">
+
+            Building Smart Digital Solutions &amp;
+            Empowering Businesses
+
+            </span><span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-tertiary to-secondary drop-shadow-[0_0_25px_rgba(255,45,120,0.4)]"><span data-i18n-key="text-10">
+                With AI
+            </span></span>
+
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="text-base sm:text-lg text-on-surface-variant font-body max-w-2xl leading-relaxed"><span data-i18n-key="text-11">
+            Established in 2011 — Over a decade of transforming visionary enterprises
+            through custom cognitive computing and software engineering.
+        </span></p>
+
+        <!-- CTA -->
+        <div class="flex flex-wrap items-center justify-center gap-5 pt-3">
+
+            <a
+                href="#showcase"
+                class="group relative inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-surface-container-high text-primary font-label text-sm uppercase tracking-wider font-bold transition-all duration-300 shadow-[0_0_20px_rgba(255,45,120,0.3)] hover:shadow-[0_0_35px_rgba(255,45,120,0.65)] hover:bg-surface-bright active:scale-95"
+            >
+                <span class="material-symbols-outlined text-lg transition-transform group-hover:rotate-45">
+                    bolt
+                </span>
+
+                <span><span data-i18n-key="text-12">
+                    Explore Capabilities
+                </span></span>
+            </a>
+
+            <a
+                href="#portfolio"
+                class="group inline-flex items-center gap-2.5 px-7 py-4 rounded-xl bg-surface-container/70 text-on-surface font-label text-sm uppercase tracking-wider font-semibold transition-all duration-300 hover:text-secondary hover:bg-surface-container-high shadow-[0_0_15px_rgba(0,255,204,0.1)] hover:shadow-[0_0_25px_rgba(0,255,204,0.3)]"
+            >
+                <span><span data-i18n-key="text-13">
+                    View Work
+                </span></span>
+
+                <span class="material-symbols-outlined text-base transition-transform group-hover:translate-x-1">
+                    arrow_forward
+                </span>
+            </a>
+
+        </div>
+
+        <!-- Metrics -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full pt-8 max-w-3xl">
+
+            <div class="flex flex-col items-center justify-center p-5 rounded-xl bg-surface-container/90 backdrop-blur-md shadow-md transition-all hover:bg-surface-container-high/90">
+                <div class="text-2xl sm:text-3xl font-headline font-bold text-primary tracking-tight drop-shadow-[0_0_10px_rgba(255,45,120,0.5)]"><span data-i18n-key="text-14">
+                    14+ Years
+                </span></div>
+
+                <div class="text-xs font-label text-on-surface-variant uppercase tracking-wider mt-1"><span data-i18n-key="text-15">
+                    Innovation Heritage
+                </span></div>
+            </div>
+
+            <div class="flex flex-col items-center justify-center p-5 rounded-xl bg-surface-container/90 backdrop-blur-md shadow-md transition-all hover:bg-surface-container-high/90">
+                <div class="text-2xl sm:text-3xl font-headline font-bold text-secondary tracking-tight drop-shadow-[0_0_10px_rgba(0,255,204,0.5)]"><span data-i18n-key="text-16">
+                    99.4%
+                </span></div>
+
+                <div class="text-xs font-label text-on-surface-variant uppercase tracking-wider mt-1"><span data-i18n-key="text-17">
+                    Client Satisfaction
+                </span></div>
+            </div>
+
+            <div class="flex flex-col items-center justify-center p-5 rounded-xl bg-surface-container/90 backdrop-blur-md shadow-md transition-all hover:bg-surface-container-high/90">
+                <div class="text-2xl sm:text-3xl font-headline font-bold text-tertiary tracking-tight drop-shadow-[0_0_10px_rgba(255,224,74,0.5)]"><span data-i18n-key="text-18">
+                    50+
+                </span></div>
+
+                <div class="text-xs font-label text-on-surface-variant uppercase tracking-wider mt-1"><span data-i18n-key="text-19">
+                    Enterprise Deployments
+                </span></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Hero Image -->
+    <div class="relative mt-14 rounded-2xl overflow-hidden bg-surface-container shadow-2xl shadow-primary/10">
+
+        <div class="hero-media-frame aspect-[16/9] w-full max-h-[560px] overflow-hidden relative">
+
+            <img
+                src="images/first_picture.webp"
+                width="512" height="286" fetchpriority="high" decoding="async"
+                alt="Futuristic 3D abstract digital landscape"
+                data-i18n-alt="hero"
+                class="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+            >
+
+            <div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-80"></div>
+
+            <div class="absolute inset-0 bg-gradient-to-r from-surface/70 via-transparent to-surface/40"></div>
+
+            <!-- HUD -->
+            <div class="hero-context absolute bottom-6 left-6 right-6 sm:bottom-10 sm:left-10 sm:right-auto max-w-md p-6 rounded-xl bg-surface-container-high/90 backdrop-blur-xl shadow-[0_0_25px_rgba(0,255,204,0.2)]">
+
+                <div class="flex items-center justify-between pb-3 gap-4">
+
+                    <span class="text-xs font-label text-secondary uppercase tracking-widest font-semibold flex items-center gap-1.5">
+
+                        <span class="material-symbols-outlined text-sm">
+                            memory
+                        </span><span data-i18n-key="text-20">
+
+                        SMART LAND AI ENGINE
+
+                    </span></span>
+
+                    <span class="text-[11px] font-label text-tertiary px-2 py-0.5 rounded bg-tertiary/10 whitespace-nowrap"><span data-i18n-key="text-21">
+                        SYSTEM: ONLINE
+                    </span></span>
+
+                </div>
+
+                <p class="text-xs font-body text-on-surface-variant leading-relaxed"><span data-i18n-key="text-22">
+                    Centralized processing hub facilitating secure data analytics,
+                    automated workflows, and seamless machine learning model deployment
+                    across client infrastructures.
+                </span></p>
+
+                <div class="mt-4 flex flex-wrap items-center gap-4 text-xs font-label">
+
+                    <div class="text-on-surface flex items-center gap-1">
+                        <span class="text-primary font-bold"><span data-i18n-key="text-23">
+                            99.9% Uptime
+                        </span></span><span data-i18n-key="text-24">
+                        Compute
+                    </span></div>
+
+                    <div class="text-on-surface flex items-center gap-1">
+                        <span class="text-secondary font-bold"><span data-i18n-key="text-25">
+                            12ms API
+                        </span></span><span data-i18n-key="text-26">
+                        Latency
+                    </span></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- ABOUT -->
+<!-- ========================================================= -->
+
+<section
+    id="about"
+    class="relative w-full py-20 px-6 lg:px-12 bg-surface-container-low"
+>
+
+    <div class="max-w-7xl mx-auto space-y-16">
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+            <div class="lg:col-span-5 space-y-3">
+
+                <span class="text-xs font-label uppercase tracking-widest text-primary font-bold flex items-center gap-2">
+
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_#ff2d78]"></span><span data-i18n-key="text-27">
+
+                    CORE PHILOSOPHY
+
+                </span></span>
+
+                <h2 class="text-3xl sm:text-5xl font-headline font-bold text-on-surface leading-tight"><span data-i18n-key="text-28">
+                    Empowering Businesses with Smart Solutions
+                </span></h2>
+
+            </div>
+
+            <div class="lg:col-span-7 flex flex-col justify-center">
+
+                <blockquote class="text-xl sm:text-2xl font-headline font-medium text-on-surface leading-relaxed pl-6 border-l-4 border-secondary"><span data-i18n-key="text-29">
+                    "Our mission is to deliver innovative, custom software solutions
+                    that integrate the power of artificial intelligence to drive real
+                    business value."
+                </span></blockquote>
+
+                <p class="text-sm font-body text-on-surface-variant mt-4 pl-6 leading-relaxed"><span data-i18n-key="text-30">
+                    Founded in 2011, Smart Land is a global technology consulting firm.
+                    We specialize in designing robust digital platforms and seamless web
+                    applications, transforming complex challenges into efficient
+                    technological experiences across various industries.
+                </span></p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Feature Cards -->
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <!-- Card 1 -->
+
+            <div class="group relative p-8 rounded-2xl bg-surface-container transition-all duration-300 hover:bg-surface-container-high shadow-lg hover:shadow-[0_0_30px_rgba(255,45,120,0.2)]">
+
+                <div class="w-14 h-14 rounded-xl bg-surface-container-highest flex items-center justify-center text-primary mb-6 shadow-[0_0_16px_rgba(255,45,120,0.3)] group-hover:scale-110 transition-transform">
+
+                    <span class="material-symbols-outlined text-3xl">
+                        smart_toy
+                    </span>
+
+                </div>
+
+                <h3 class="text-xl font-headline font-bold text-on-surface mb-3 group-hover:text-primary transition-colors"><span data-i18n-key="text-31">
+                    Technology Consulting
+                </span></h3>
+
+                <p class="text-sm font-body text-on-surface-variant leading-relaxed"><span data-i18n-key="text-32">
+                    We provide expert guidance to help organizations design scalable
+                    IT infrastructures, plan secure database architectures, and adopt
+                    the right technologies for their digital transformation.
+                </span></p>
+
+                <div class="mt-6 flex items-center gap-2 text-xs font-label text-primary uppercase tracking-wider font-semibold"><span data-i18n-key="text-33">
+                    Our Approach
+
+                    </span><span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">
+                        chevron_right
+                    </span>
+                </div>
+
+            </div>
+
+
+            <!-- Card 2 -->
+
+            <div class="group relative p-8 rounded-2xl bg-surface-container transition-all duration-300 hover:bg-surface-container-high shadow-lg hover:shadow-[0_0_30px_rgba(0,255,204,0.2)]">
+
+                <div class="w-14 h-14 rounded-xl bg-surface-container-highest flex items-center justify-center text-secondary mb-6 shadow-[0_0_16px_rgba(0,255,204,0.3)] group-hover:scale-110 transition-transform">
+
+                    <span class="material-symbols-outlined text-3xl">
+                        hub
+                    </span>
+
+                </div>
+
+                <h3 class="text-xl font-headline font-bold text-on-surface mb-3 group-hover:text-secondary transition-colors"><span data-i18n-key="text-34">
+                    Custom Software Development
+                </span></h3>
+
+                <p class="text-sm font-body text-on-surface-variant leading-relaxed"><span data-i18n-key="text-35">
+                    Building robust web and mobile applications tailored to your specific
+                    needs. We focus on secure RESTful APIs, responsive front-end designs,
+                    and reliable backend systems to ensure high performance.
+                </span></p>
+
+                <div class="mt-6 flex items-center gap-2 text-xs font-label text-secondary uppercase tracking-wider font-semibold"><span data-i18n-key="text-36">
+                    View Projects
+
+                    </span><span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">
+                        chevron_right
+                    </span>
+                </div>
+
+            </div>
+
+
+            <!-- Card 3 -->
+
+            <div class="group relative p-8 rounded-2xl bg-surface-container transition-all duration-300 hover:bg-surface-container-high shadow-lg hover:shadow-[0_0_30px_rgba(255,224,74,0.2)]">
+
+                <div class="w-14 h-14 rounded-xl bg-surface-container-highest flex items-center justify-center text-tertiary mb-6 shadow-[0_0_16px_rgba(255,224,74,0.3)] group-hover:scale-110 transition-transform">
+
+                    <span class="material-symbols-outlined text-3xl">
+                        psychology
+                    </span>
+
+                </div>
+
+                <h3 class="text-xl font-headline font-bold text-on-surface mb-3 group-hover:text-tertiary transition-colors"><span data-i18n-key="text-37">
+                    AI Integration
+                </span></h3>
+
+                <p class="text-sm font-body text-on-surface-variant leading-relaxed"><span data-i18n-key="text-38">
+                    Enhancing everyday business operations by embedding practical AI
+                    features, from smart search algorithms and natural language
+                    processing to automated data analysis and decision support.
+                </span></p>
+
+                <div class="mt-6 flex items-center gap-2 text-xs font-label text-tertiary uppercase tracking-wider font-semibold"><span data-i18n-key="text-39">
+                    Learn More
+
+                    </span><span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">
+                        chevron_right
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- PORTFOLIO -->
+<!-- ========================================================= -->
+
+<section
+    id="portfolio"
+    class="relative w-full py-24 px-6 lg:px-12 max-w-7xl mx-auto"
+>
+
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+
+        <div>
+
+            <span class="text-xs font-label uppercase tracking-widest text-secondary font-bold flex items-center gap-2">
+
+                <span class="w-1.5 h-1.5 rounded-full bg-secondary shadow-[0_0_8px_#00ffcc]"></span><span data-i18n-key="text-40">
+
+                Production Ecosystems
+
+            </span></span>
+
+            <h2 class="text-3xl sm:text-5xl font-headline font-bold text-on-surface mt-2"><span data-i18n-key="text-41">
+                Featured Deployments
+            </span></h2>
+
+        </div>
+
+
+        <!-- Filters -->
+
+        <div class="flex flex-wrap items-center gap-2">
+
+            <button
+                type="button"
+                class="portfolio-filter-btn px-4 py-2 rounded-lg bg-surface-container-high text-primary font-label text-xs uppercase tracking-wider font-semibold shadow-[0_0_12px_rgba(255,45,120,0.3)] hover:bg-surface-bright transition-all"
+                data-category="all"
+            ><span data-i18n-key="text-42">
+                All
+            </span></button>
+
+            <button
+                type="button"
+                class="portfolio-filter-btn px-4 py-2 rounded-lg bg-surface-container text-on-surface-variant font-label text-xs uppercase tracking-wider font-semibold hover:text-secondary hover:bg-surface-container-high transition-all"
+                data-category="accessibility"
+            ><span data-i18n-key="text-43">
+                Accessibility
+            </span></button>
+
+            <button
+                type="button"
+                class="portfolio-filter-btn px-4 py-2 rounded-lg bg-surface-container text-on-surface-variant font-label text-xs uppercase tracking-wider font-semibold hover:text-secondary hover:bg-surface-container-high transition-all"
+                data-category="real-estate"
+            ><span data-i18n-key="text-44">
+                Real Estate
+            </span></button>
+
+            <button
+                type="button"
+                class="portfolio-filter-btn px-4 py-2 rounded-lg bg-surface-container text-on-surface-variant font-label text-xs uppercase tracking-wider font-semibold hover:text-secondary hover:bg-surface-container-high transition-all"
+                data-category="edtech"
+            ><span data-i18n-key="text-45">
+                EdTech
+            </span></button>
+
+            <button
+                type="button"
+                class="portfolio-filter-btn px-4 py-2 rounded-lg bg-surface-container text-on-surface-variant font-label text-xs uppercase tracking-wider font-semibold hover:text-secondary hover:bg-surface-container-high transition-all"
+                data-category="healthtech"
+            ><span data-i18n-key="text-46">
+                HealthTech
+            </span></button>
+
+            <button
+                type="button"
+                class="portfolio-filter-btn px-4 py-2 rounded-lg bg-surface-container text-on-surface-variant font-label text-xs uppercase tracking-wider font-semibold hover:text-secondary hover:bg-surface-container-high transition-all"
+                data-category="commerce"
+            ><span data-i18n-key="text-47">
+                Commerce
+            </span></button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Portfolio Grid -->
+
+    <div
+        id="portfolio-grid"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8"
+    >
+
+        <!-- PROJECT 1 -->
+
+        <article
+            class="portfolio-item lg:col-span-7 flex flex-col rounded-2xl bg-surface-container overflow-hidden group shadow-xl hover:shadow-[0_0_30px_rgba(255,45,120,0.25)] transition-all duration-300"
+            data-cat="accessibility"
+        >
+
+            <div class="relative w-full aspect-[16/10] overflow-hidden bg-surface-container-highest">
+
+                <img
+                    src="images/smart_signal.webp"
+                    width="512" height="382" loading="lazy" decoding="async"
+                    alt="Smart Signal AI sign language motion capture"
+                    data-i18n-alt="signal"
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                >
+
+                <div class="absolute inset-0 bg-gradient-to-t from-surface-container via-surface-container/20 to-transparent"></div>
+
+                <div class="absolute top-4 left-4">
+                    <span class="px-3 py-1 rounded-full text-xs font-label uppercase tracking-wider bg-surface-container-high/90 backdrop-blur-md text-primary font-bold shadow-md"><span data-i18n-key="text-48">
+                        Computer Vision | Accessibility
+                    </span></span>
+                </div>
+
+            </div>
+
+            <div class="p-7 flex flex-col justify-between flex-grow space-y-4">
+
+                <div>
+
+                    <div class="flex items-center justify-between mb-2 gap-4">
+
+                        <h3 class="text-2xl font-headline font-bold text-on-surface group-hover:text-primary transition-colors"><span data-i18n-key="text-49">
+                            Smart Signal
+                        </span></h3>
+
+                        <span class="text-xs font-label text-secondary font-semibold whitespace-nowrap"><span data-i18n-key="text-50">
+                            99.8% Accuracy
+                        </span></span>
+
+                    </div>
+
+                    <p class="text-sm font-body text-on-surface-variant leading-relaxed"><span data-i18n-key="text-51">
+                        An AI-powered application that provides real-time translation
+                        of sign language into text and voice, breaking down communication
+                        barriers and fostering inclusivity for the deaf and hard of hearing.
+                    </span></p>
+
+                </div>
+
+                <div class="pt-4 flex items-center justify-between gap-4">
+
+                    <div class="text-xs font-label text-on-surface-variant"><span data-i18n-key="text-52">
+                        SDK: iOS / Android / WebGL
+                    </span></div>
+
+                    <a
+                        href="#case-signal" data-case="signal"
+                        class="inline-flex items-center gap-2 text-xs font-label uppercase tracking-wider text-primary font-bold"
+                    ><span data-i18n-key="text-53">
+                        Inspect Case Study
+
+                        </span><span class="material-symbols-outlined text-base">
+                            north_east
+                        </span>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- PROJECT 2 -->
+
+        <article
+            class="portfolio-item lg:col-span-5 flex flex-col rounded-2xl bg-surface-container overflow-hidden group shadow-xl hover:shadow-[0_0_30px_rgba(0,255,204,0.25)] transition-all duration-300"
+            data-cat="real-estate"
+        >
+
+            <div class="relative w-full aspect-[16/10] overflow-hidden bg-surface-container-highest">
+
+                <img
+                    src="images/my_key.webp"
+                    width="512" height="382" loading="lazy" decoding="async"
+                    alt="MyKey digital real estate platform"
+                    data-i18n-alt="mykey"
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                >
+
+                <div class="absolute inset-0 bg-gradient-to-t from-surface-container via-surface-container/20 to-transparent"></div>
+
+                <div class="absolute top-4 left-4">
+                    <span class="px-3 py-1 rounded-full text-xs font-label uppercase tracking-wider bg-surface-container-high/90 backdrop-blur-md text-secondary font-bold shadow-md"><span data-i18n-key="text-54">
+                        Real Estate &amp; Automotive | AI Search
+                    </span></span>
+                </div>
+
+            </div>
+
+            <div class="p-7 flex flex-col justify-between flex-grow space-y-4">
+
+                <div>
+
+                    <div class="flex items-center justify-between mb-2 gap-4">
+
+                        <h3 class="text-2xl font-headline font-bold text-on-surface group-hover:text-secondary transition-colors"><span data-i18n-key="text-55">
+                            MyKey
+                        </span></h3>
+
+                        <span class="text-xs font-label text-primary font-semibold whitespace-nowrap"><span data-i18n-key="text-56">
+                            10k+ Listings
+                        </span></span>
+
+                    </div>
+
+                    <p class="text-sm font-body text-on-surface-variant leading-relaxed"><span data-i18n-key="text-57">
+                        A smart platform for advertising real estate and vehicles for
+                        sale and rent. It uses AI-powered search and personalized
+                        recommendations to connect buyers, sellers, and renters efficiently.
+                    </span></p>
+
+                </div>
+
+                <div class="pt-4 flex items-center justify-between gap-4">
+
+                    <div class="text-xs font-label text-on-surface-variant"><span data-i18n-key="text-58">
+                        Engine: Spatial Twin AI
+                    </span></div>
+
+                    <a
+                        href="#case-mykey" data-case="mykey"
+                        class="inline-flex items-center gap-2 text-xs font-label uppercase tracking-wider text-secondary font-bold"
+                    ><span data-i18n-key="text-59">
+                        Inspect Case Study
+
+                        </span><span class="material-symbols-outlined text-base">
+                            north_east
+                        </span>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- PROJECT 3 -->
+
+        <article
+            class="portfolio-item lg:col-span-4 flex flex-col rounded-2xl bg-surface-container overflow-hidden group shadow-xl hover:shadow-[0_0_30px_rgba(255,224,74,0.25)] transition-all duration-300"
+            data-cat="edtech"
+        >
+
+            <div class="relative w-full aspect-[4/3] overflow-hidden bg-surface-container-highest">
+
+                <img
+                    src="images/sada.webp"
+                    width="512" height="382" loading="lazy" decoding="async"
+                    alt="Sada adaptive e-learning platform"
+                    data-i18n-alt="sada"
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                >
+
+                <div class="absolute inset-0 bg-gradient-to-t from-surface-container via-surface-container/20 to-transparent"></div>
+
+                <div class="absolute top-4 left-4">
+                    <span class="px-3 py-1 rounded-full text-xs font-label uppercase tracking-wider bg-surface-container-high/90 backdrop-blur-md text-tertiary font-bold shadow-md"><span data-i18n-key="text-60">
+                        E-Learning Platform | AI-Driven
+                    </span></span>
+                </div>
+
+            </div>
+
+            <div class="p-7 flex flex-col justify-between flex-grow space-y-4">
+
+                <div>
+
+                    <div class="flex items-center justify-between mb-2 gap-4">
+
+                        <h3 class="text-xl font-headline font-bold text-on-surface group-hover:text-tertiary transition-colors"><span data-i18n-key="text-61">
+                            Sada
+                        </span></h3>
+
+                        <span class="text-xs font-label text-tertiary font-semibold whitespace-nowrap"><span data-i18n-key="text-62">
+                            120k Users
+                        </span></span>
+
+                    </div>
+
+                    <p class="text-sm font-body text-on-surface-variant leading-relaxed"><span data-i18n-key="text-63">
+                        A smart distance learning platform that leverages AI to
+                        personalize educational content, track student progress,
+                        and provide interactive virtual classrooms.
+                    </span></p>
+
+                </div>
+
+                <div class="pt-4">
+
+                    <a
+                        href="#case-sada" data-case="sada"
+                        class="inline-flex items-center gap-2 text-xs font-label uppercase tracking-wider text-tertiary font-bold"
+                    ><span data-i18n-key="text-64">
+                        Inspect Case Study
+
+                        </span><span class="material-symbols-outlined text-base">
+                            north_east
+                        </span>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- PROJECT 4 -->
+
+        <article
+            class="portfolio-item lg:col-span-4 flex flex-col rounded-2xl bg-surface-container overflow-hidden group shadow-xl hover:shadow-[0_0_30px_rgba(255,45,120,0.25)] transition-all duration-300"
+            data-cat="healthtech"
+        >
+
+            <div class="relative w-full aspect-[4/3] overflow-hidden bg-surface-container-highest">
+
+                <img
+                    src="images/Hospital_system.webp"
+                    width="512" height="382" loading="lazy" decoding="async"
+                    alt="Hospital Management System"
+                    data-i18n-alt="hospital"
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                >
+
+                <div class="absolute inset-0 bg-gradient-to-t from-surface-container via-surface-container/20 to-transparent"></div>
+
+                <div class="absolute top-4 left-4">
+                    <span class="px-3 py-1 rounded-full text-xs font-label uppercase tracking-wider bg-surface-container-high/90 backdrop-blur-md text-primary font-bold shadow-md"><span data-i18n-key="text-65">
+                        Healthcare IT | Data Security
+                    </span></span>
+                </div>
+
+            </div>
+
+            <div class="p-7 flex flex-col justify-between flex-grow space-y-4">
+
+                <div>
+
+                    <div class="flex items-center justify-between mb-2 gap-4">
+
+                        <h3 class="text-xl font-headline font-bold text-on-surface group-hover:text-primary transition-colors"><span data-i18n-key="text-66">
+                            Hospital Systems
+                        </span></h3>
+
+                        <span class="text-xs font-label text-primary font-semibold whitespace-nowrap"><span data-i18n-key="text-67">
+                            HIPAA Compliant
+                        </span></span>
+
+                    </div>
+
+                    <p class="text-sm font-body text-on-surface-variant leading-relaxed"><span data-i18n-key="text-68">
+                        Comprehensive electronic medical records and healthcare
+                        management systems designed to streamline hospital operations,
+                        manage patient data securely, and support medical decisions.
+                    </span></p>
+
+                </div>
+
+                <div class="pt-4">
+
+                    <a
+                        href="#case-hospital" data-case="hospital"
+                        class="inline-flex items-center gap-2 text-xs font-label uppercase tracking-wider text-primary font-bold"
+                    ><span data-i18n-key="text-69">
+                        Inspect Case Study
+
+                        </span><span class="material-symbols-outlined text-base">
+                            north_east
+                        </span>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- PROJECT 5 -->
+
+        <article
+            class="portfolio-item lg:col-span-4 flex flex-col rounded-2xl bg-surface-container overflow-hidden group shadow-xl hover:shadow-[0_0_30px_rgba(0,255,204,0.25)] transition-all duration-300"
+            data-cat="commerce"
+        >
+
+            <div class="relative w-full aspect-[4/3] overflow-hidden bg-surface-container-highest">
+
+                <img
+                    src="images/welcome.webp"
+                    width="512" height="382" loading="lazy" decoding="async"
+                    alt="Welcome e-commerce application"
+                    data-i18n-alt="welcome"
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                >
+
+                <div class="absolute inset-0 bg-gradient-to-t from-surface-container via-surface-container/20 to-transparent"></div>
+
+                <div class="absolute top-4 left-4">
+                    <span class="px-3 py-1 rounded-full text-xs font-label uppercase tracking-wider bg-surface-container-high/90 backdrop-blur-md text-secondary font-bold shadow-md"><span data-i18n-key="text-70">
+                        E-Commerce App | Smart Retail
+                    </span></span>
+                </div>
+
+            </div>
+
+            <div class="p-7 flex flex-col justify-between flex-grow space-y-4">
+
+                <div>
+
+                    <div class="flex items-center justify-between mb-2 gap-4">
+
+                        <h3 class="text-xl font-headline font-bold text-on-surface group-hover:text-secondary transition-colors"><span data-i18n-key="text-71">
+                            Welcome
+                        </span></h3>
+
+                        <span class="text-xs font-label text-secondary font-semibold whitespace-nowrap"><span data-i18n-key="text-72">
+                            +72% Conversion
+                        </span></span>
+
+                    </div>
+
+                    <p class="text-sm font-body text-on-surface-variant leading-relaxed"><span data-i18n-key="text-73">
+                        A dynamic multi-store e-commerce application integrating
+                        AI-powered product recommendations, vendor management,
+                        and smart customer support to boost online retail sales.
+                    </span></p>
+
+                </div>
+
+                <div class="pt-4">
+
+                    <a
+                        href="#case-welcome" data-case="welcome"
+                        class="inline-flex items-center gap-2 text-xs font-label uppercase tracking-wider text-secondary font-bold"
+                    ><span data-i18n-key="text-74">
+                        Inspect Case Study
+
+                        </span><span class="material-symbols-outlined text-base">
+                            north_east
+                        </span>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SHOWCASE -->
+<!-- ========================================================= -->
+
+<section
+    id="showcase"
+    class="relative w-full py-24 px-6 lg:px-12 bg-surface-container-lowest overflow-hidden"
+>
+
+    <div class="absolute -top-32 right-1/4 w-[500px] h-[500px] bg-primary/10 blur-[150px] rounded-full pointer-events-none"></div>
+
+    <div class="absolute -bottom-32 left-1/4 w-[500px] h-[500px] bg-secondary/10 blur-[150px] rounded-full pointer-events-none"></div>
+
+
+    <div class="relative max-w-7xl mx-auto space-y-12">
+
+        <!-- Header -->
+
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+
+            <div class="space-y-3 max-w-2xl">
+
+                <span class="text-xs font-label uppercase tracking-widest text-primary font-bold flex items-center gap-2">
+
+                    <span class="material-symbols-outlined text-base">
+                        videocam
+                    </span><span data-i18n-key="text-75">
+
+                    Cinematic Document
+
+                </span></span>
+
+                <h2 class="text-3xl sm:text-5xl font-headline font-bold text-on-surface"><span data-i18n-key="text-76">
+                    Decade of Breakthroughs
+                </span></h2>
+
+                <p class="text-sm sm:text-base font-body text-on-surface-variant"><span data-i18n-key="text-77">
+                    Watch: Smart Land’s Decade of Breakthroughs in Applied Artificial
+                    Intelligence (2011–Present)
+                </span></p>
+
+            </div>
+
+            <div class="flex items-center gap-3 px-4 py-2 rounded-xl bg-surface-container-high/60 backdrop-blur-md self-start">
+
+                <span class="w-2.5 h-2.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_#ff2d78]"></span>
+
+                <span class="text-xs font-label uppercase tracking-wider text-on-surface font-semibold"><span data-i18n-key="text-78">
+                    HD Video • Original Music • Captions
+                </span></span>
+
+            </div>
+
+        </div>
+
+
+        <!-- Real, locally hosted videos: native controls drive actual media. -->
+        <div class="showcase-videos" data-i18n-ignore>
+            <figure>
+                <figcaption data-i18n-key="video.intro">Meet Smart Land</figcaption>
+                <video id="company-video" controls playsinline preload="metadata" poster="media/company-poster.webp" aria-label="Meet Smart Land" data-i18n-aria="companyVideo">
+                    <source src="media/company-intro.mp4" type="video/mp4">
+                    <track kind="captions" src="media/company-en.vtt" srclang="en" label="English" default>
+                    <track kind="captions" src="media/company-ar.vtt" srclang="ar" label="العربية">
+                    <span data-i18n-key="video.fallback">Your browser cannot play this video. Download it below.</span>
+                </video>
+                <a href="media/company-intro.mp4" download data-i18n-key="video.downloadIntro">Download company introduction</a>
+            </figure>
+            <figure>
+                <figcaption data-i18n-key="video.projects">Five projects, practical possibilities</figcaption>
+                <video id="projects-video" controls playsinline preload="metadata" poster="media/projects-poster.webp" aria-label="Smart Land project overview" data-i18n-aria="projectsVideo">
+                    <source src="media/project-overview.mp4" type="video/mp4">
+                    <track kind="captions" src="media/projects-en.vtt" srclang="en" label="English" default>
+                    <track kind="captions" src="media/projects-ar.vtt" srclang="ar" label="العربية">
+                    <span data-i18n-key="video.fallback">Your browser cannot play this video. Download it below.</span>
+                </video>
+                <a href="media/project-overview.mp4" download data-i18n-key="video.downloadProjects">Download project overview</a>
+            </figure>
+        </div>
+
+        <!-- Service Cards -->
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+
+            <div class="p-6 rounded-xl bg-surface-container/60 backdrop-blur-md shadow-md">
+
+                <div class="flex items-center gap-3 text-secondary mb-3">
+
+                    <span class="text-xs font-label uppercase tracking-widest font-bold"><span data-i18n-key="text-87">
+                        Tech Consulting
+                    </span></span>
+
+                </div>
+
+                <h4 class="text-lg font-headline font-bold text-on-surface mb-2"><span data-i18n-key="text-88">
+                    Strategic IT Consulting
+                </span></h4>
+
+                <p class="text-xs font-body text-on-surface-variant leading-relaxed"><span data-i18n-key="text-89">
+                    We analyze your business needs and provide expert technological
+                    roadmaps to optimize your digital infrastructure and daily operations.
+                </span></p>
+
+            </div>
+
+
+            <div class="p-6 rounded-xl bg-surface-container/60 backdrop-blur-md shadow-md">
+
+                <div class="flex items-center gap-3 text-primary mb-3">
+
+                    <span class="text-xs font-label uppercase tracking-widest font-bold"><span data-i18n-key="text-90">
+                        Custom Software
+                    </span></span>
+
+                </div>
+
+                <h4 class="text-lg font-headline font-bold text-on-surface mb-2"><span data-i18n-key="text-91">
+                    Tailored Software Solutions
+                </span></h4>
+
+                <p class="text-xs font-body text-on-surface-variant leading-relaxed"><span data-i18n-key="text-92">
+                    Designing and building scalable applications and platforms
+                    customized to meet the unique demands of various sectors.
+                </span></p>
+
+            </div>
+
+
+            <div class="p-6 rounded-xl bg-surface-container/60 backdrop-blur-md shadow-md">
+
+                <div class="flex items-center gap-3 text-tertiary mb-3">
+
+                    <span class="text-xs font-label uppercase tracking-widest font-bold"><span data-i18n-key="text-93">
+                        AI Integration
+                    </span></span>
+
+                </div>
+
+                <h4 class="text-lg font-headline font-bold text-on-surface mb-2"><span data-i18n-key="text-94">
+                    Artificial Intelligence
+                </span></h4>
+
+                <p class="text-xs font-body text-on-surface-variant leading-relaxed"><span data-i18n-key="text-95">
+                    Enhancing operational efficiency by embedding AI algorithms
+                    and automation into your core business systems.
+                </span></p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- CONTACT CTA -->
+<!-- ========================================================= -->
+
+<section
+    id="consult"
+    class="relative w-full py-20 px-6 lg:px-12 bg-surface"
+>
+
+    <div class="relative max-w-5xl mx-auto rounded-3xl p-10 sm:p-16 bg-surface-container-high/70 backdrop-blur-2xl shadow-[0_0_40px_rgba(255,45,120,0.15)] flex flex-col items-stretch gap-8 text-start overflow-hidden">
+
+        <div class="absolute -right-16 -top-16 w-64 h-64 bg-primary/20 blur-[90px] rounded-full pointer-events-none"></div>
+
+        <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-secondary/20 blur-[90px] rounded-full pointer-events-none"></div>
+
+
+        <div class="space-y-4 max-w-xl relative z-10">
+
+            <span class="text-xs font-label uppercase tracking-widest text-secondary font-bold"><span data-i18n-key="text-96">
+                Let's Work Together
+            </span></span>
+
+            <h3 class="text-3xl sm:text-4xl font-headline font-extrabold text-on-surface leading-tight"><span data-i18n-key="text-97">
+                Have an idea or project in your mind?
+            </span></h3>
+
+            <p class="text-sm font-body text-on-surface-variant"><span data-i18n-key="text-98">
+                Our tech consultants and AI experts are here to provide strategic
+                guidance and software solutions tailored to your challenges.
+            </span></p>
+
+        </div>
+
+
+        <form
+            action="mailto:consult@smartland.ai"
+            method="post"
+            enctype="text/plain"
+            class="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-5 w-full"
+        >
+            <div class="flex flex-col gap-2">
+                <label for="contact-username" class="text-xs font-label uppercase tracking-wider text-on-surface font-semibold">
+                    <span data-i18n-key="contact.username">Username</span>
+                </label>
+                <input
+                    id="contact-username"
+                    name="username"
+                    type="text"
+                    autocomplete="username"
+                    required
+                    class="w-full rounded-xl border border-outline-variant bg-surface-container px-4 py-3 font-body text-on-surface"
+                >
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="contact-email" class="text-xs font-label uppercase tracking-wider text-on-surface font-semibold">
+                    <span data-i18n-key="contact.email">Email</span>
+                </label>
+                <input
+                    id="contact-email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    required
+                    class="w-full rounded-xl border border-outline-variant bg-surface-container px-4 py-3 font-body text-on-surface"
+                >
+            </div>
+            <div class="flex flex-col gap-2 sm:col-span-2">
+                <label for="contact-message" class="text-xs font-label uppercase tracking-wider text-on-surface font-semibold">
+                    <span data-i18n-key="contact.message">Message</span>
+                </label>
+                <textarea
+                    id="contact-message"
+                    name="message"
+                    rows="5"
+                    required
+                    class="w-full resize-y rounded-xl border border-outline-variant bg-surface-container px-4 py-3 font-body text-on-surface"
+                ></textarea>
+            </div>
+            <div class="sm:col-span-2">
+                <button
+                    type="submit"
+                    class="px-8 py-4 rounded-xl bg-surface-bright text-primary font-label text-sm uppercase tracking-wider font-bold transition-all duration-300 shadow-[0_0_20px_rgba(255,45,120,0.4)] hover:shadow-[0_0_35px_rgba(255,45,120,0.8)] active:scale-95"
+                ><span data-i18n-key="contact.submit">Send Message</span></button>
+            </div>
+        </form>
+
+    </div>
+
+</section>
+
+</div>
+
+</main>
+
+
+<!-- ========================================================= -->
+<!-- FOOTER -->
+<!-- ========================================================= -->
+
+<footer class="w-full bg-surface-container-lowest py-16">
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12">
+
+
+            <!-- Brand -->
+
+            <div class="flex flex-col gap-4">
+
+                <div class="flex items-center gap-3">
+
+                    <img
+                        src="images/logo.avif"
+                        alt="Smart Land Logo"
+                        data-i18n-alt="logo"
+                        class="h-12 w-auto object-contain rounded"
+                    >
+
+                    <div class="flex flex-col">
+
+                        <span class="text-base font-headline font-bold text-on-surface tracking-tight leading-tight"><span data-i18n-key="text-100">
+                            Smart Land
+                        </span></span>
+
+                        <span class="text-[10px] font-label uppercase tracking-widest text-secondary font-medium"><span data-i18n-key="text-101">
+                            Est. 2011 • Cognitive AI
+                        </span></span>
+
+                    </div>
+
+                </div>
+
+                <p class="text-xs text-on-surface-variant leading-relaxed font-body"><span data-i18n-key="text-102">
+                    Pioneering high-assurance cognitive software, autonomous pipelines,
+                    and distributed neural architectures for global enterprises.
+                </span></p>
+
+                <div class="inline-flex items-center gap-2 pt-1 text-[11px] font-label text-on-surface-variant">
+
+                    <span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_#00ffcc]"></span>
+
+                    <span class="text-secondary font-semibold"><span data-i18n-key="text-103">
+                        Matrix Core Active
+                    </span></span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Navigation -->
+
+            <div class="flex flex-col gap-3.5">
+
+                <span class="text-xs font-label uppercase tracking-widest text-primary font-bold flex items-center gap-2">
+
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_#ff2d78]"></span><span data-i18n-key="text-104">
+
+                    Navigation
+
+                </span></span>
+
+                <ul class="text-xs text-on-surface-variant space-y-2.5 font-body">
+
+                    <li>
+                        <a
+                            href="#about"
+                            class="hover:text-primary transition-colors flex items-center gap-2"
+                        >
+                            <span class="material-symbols-outlined text-xs text-outline">
+                                chevron_right
+                            </span><span data-i18n-key="text-105">
+                            About Us
+                        </span></a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="#portfolio"
+                            class="hover:text-primary transition-colors flex items-center gap-2"
+                        >
+                            <span class="material-symbols-outlined text-xs text-outline">
+                                chevron_right
+                            </span><span data-i18n-key="text-106">
+                            Portfolio
+                        </span></a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="#showcase"
+                            class="hover:text-primary transition-colors flex items-center gap-2"
+                        >
+                            <span class="material-symbols-outlined text-xs text-outline">
+                                chevron_right
+                            </span><span data-i18n-key="text-107">
+                            Showcase
+                        </span></a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="#consult"
+                            class="hover:text-primary transition-colors flex items-center gap-2"
+                        >
+                            <span class="material-symbols-outlined text-xs text-outline">
+                                chevron_right
+                            </span><span data-i18n-key="text-108">
+                            Contact &amp; Review
+                        </span></a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- Locations -->
+
+            <div class="flex flex-col gap-3.5">
+
+                <span class="text-xs font-label uppercase tracking-widest text-secondary font-bold flex items-center gap-2">
+
+                    <span class="w-1.5 h-1.5 rounded-full bg-secondary shadow-[0_0_8px_#00ffcc]"></span><span data-i18n-key="text-109">
+
+                    Global Hubs
+
+                </span></span>
+
+                <div class="text-xs text-on-surface-variant space-y-2.5 font-body">
+
+                    <div class="flex items-start gap-2.5">
+
+                        <span class="material-symbols-outlined text-sm text-secondary shrink-0 mt-0.5">
+                            location_on
+                        </span>
+
+                        <div>
+
+                            <p class="font-medium text-on-surface"><span data-i18n-key="text-110">
+                                Syria
+                            </span></p>
+
+                            <p class="text-[11px] text-on-surface-variant"><span data-i18n-key="text-111">
+                                Damascus Cloud Center
+                            </span></p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="flex items-start gap-2.5">
+
+                        <span class="material-symbols-outlined text-sm text-secondary shrink-0 mt-0.5">
+                            location_on
+                        </span>
+
+                        <div>
+
+                            <p class="font-medium text-on-surface"><span data-i18n-key="text-112">
+                                UAE
+                            </span></p>
+
+                            <p class="text-[11px] text-on-surface-variant"><span data-i18n-key="text-113">
+                                Dubai • Marina Tech Bay
+                            </span></p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="flex items-start gap-2.5">
+
+                        <span class="material-symbols-outlined text-sm text-secondary shrink-0 mt-0.5">
+                            location_on
+                        </span>
+
+                        <div>
+
+                            <p class="font-medium text-on-surface"><span data-i18n-key="text-114">
+                                Saudi Arabia
+                            </span></p>
+
+                            <p class="text-[11px] text-on-surface-variant"><span data-i18n-key="text-115">
+                                Riyadh • Market District
+                            </span></p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Contact -->
+
+            <div class="flex flex-col gap-3.5">
+
+                <span class="text-xs font-label uppercase tracking-widest text-tertiary font-bold flex items-center gap-2">
+
+                    <span class="w-1.5 h-1.5 rounded-full bg-tertiary shadow-[0_0_8px_rgba(255,224,74,0.5)]"></span><span data-i18n-key="text-116">
+
+                    Communications
+
+                </span></span>
+
+                <div class="text-xs text-on-surface-variant space-y-3 font-body">
+
+                    <a
+                        href="mailto:consult@smartland.ai"
+                        class="flex items-center gap-2.5 hover:text-tertiary transition-colors group"
+                    >
+
+                        <span class="material-symbols-outlined text-sm text-tertiary shrink-0">
+                            mail
+                        </span>
+
+                        <span class="text-on-surface group-hover:text-tertiary transition-colors"><span data-i18n-key="text-117">
+                            consult@smartland.ai
+                        </span></span>
+
+                    </a>
+
+
+                    <div class="flex items-center gap-2.5">
+
+                        <span class="material-symbols-outlined text-sm text-tertiary shrink-0">
+                            call
+                        </span>
+
+                        <span class="text-on-surface"><span data-i18n-key="text-118">
+                            Phone details pending confirmation
+                        </span></span>
+
+                    </div>
+
+
+                    <div class="pt-1">
+
+                        <div class="px-2.5 py-1.5 rounded bg-surface-container-high/80 flex items-center gap-2 w-fit">
+
+                            <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+
+                            <span class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider"><span data-i18n-key="text-119">
+                                Inquiries Active 24/7
+                            </span></span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Footer Bottom -->
+
+        <div class="pt-8 border-t border-outline-variant/30 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-label text-on-surface-variant">
+
+            <div><span data-i18n-key="text-120">
+                © 2011–2025 Smart Land Consulting Inc. All rights reserved.
+            </span></div>
+
+            <div class="flex flex-wrap items-center justify-center gap-6">
+
+                <a
+                    href="#"
+                    class="hover:text-on-surface transition-colors"
+                ><span data-i18n-key="text-121">
+                    Privacy Protocol
+                </span></a>
+
+                <a
+                    href="#"
+                    class="hover:text-on-surface transition-colors"
+                ><span data-i18n-key="text-122">
+                    Terms of Service
+                </span></a>
+
+                <a
+                    href="#"
+                    class="hover:text-on-surface transition-colors"
+                ><span data-i18n-key="text-123">
+                    Security Matrix
+                </span></a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<dialog id="case-dialog" aria-labelledby="case-title" data-i18n-ignore>
+    <form method="dialog"><button class="site-toggle case-close" data-i18n-key="case.close">Close</button></form>
+    <h2 id="case-title"></h2>
+    <p id="case-description"></p>
+    <h3 data-i18n-key="case.challengeLabel">Challenge</h3><p id="case-challenge"></p>
+    <h3 data-i18n-key="case.solutionLabel">Solution</h3><p id="case-solution"></p>
+    <h3 data-i18n-key="case.outcomeLabel">Intended outcome</h3><p id="case-outcome"></p>
+    <p class="case-note" data-i18n-key="case.note">These summaries describe the capabilities in the project brief. Measured client outcomes and customer testimonials have not been supplied.</p>
+</dialog>
+
+</body>
+</html>
