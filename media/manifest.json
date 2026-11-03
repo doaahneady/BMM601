@@ -1,0 +1,80 @@
+[
+  {
+    "file": "company-intro.mp4",
+    "duration_seconds": 24,
+    "resolution": "1280x720",
+    "fps": 24,
+    "video_codec": "H.264",
+    "audio_codec": "AAC",
+    "audio_origin": "Original synthesized electronic score",
+    "bytes": 599857,
+    "scenes": [
+      [
+        "Smart Land",
+        "Technology consulting and digital solutions. Established in 2011.",
+        "حلول تقنية واستشارات من سمارت لاند. تأسست عام 2011.",
+        "logo.avif"
+      ],
+      [
+        "Our mission",
+        "Custom software that meets the needs of different sectors.",
+        "برمجيات مخصصة تلبي احتياجات قطاعات مختلفة.",
+        "first_picture.webp"
+      ],
+      [
+        "Practical AI",
+        "Integrating artificial intelligence into business processes.",
+        "دمج الذكاء الاصطناعي في عمليات الأعمال.",
+        "smart_signal.webp"
+      ],
+      [
+        "Explore our work",
+        "Discover accessibility, property, education, healthcare and commerce projects.",
+        "اكتشف مشاريع التواصل والعقارات والتعليم والصحة والتجارة.",
+        "welcome.webp"
+      ]
+    ]
+  },
+  {
+    "file": "project-overview.mp4",
+    "duration_seconds": 30,
+    "resolution": "1280x720",
+    "fps": 24,
+    "video_codec": "H.264",
+    "audio_codec": "AAC",
+    "audio_origin": "Original synthesized electronic score",
+    "bytes": 783171,
+    "scenes": [
+      [
+        "Smart Signal",
+        "Sign-language translation to support communication.",
+        "سمارت سيغنال: ترجمة لغة الإشارة لدعم التواصل.",
+        "smart_signal.webp"
+      ],
+      [
+        "MyKey",
+        "Property and vehicle listings for sale and rent.",
+        "ماي كي: إعلانات العقارات والمركبات للبيع والإيجار.",
+        "my_key.webp"
+      ],
+      [
+        "Sada",
+        "A platform for distance learning.",
+        "صدى: منصة للتعلم عن بعد.",
+        "sada.webp"
+      ],
+      [
+        "Hospital Systems",
+        "Digital systems for managing hospital operations.",
+        "أنظمة رقمية لإدارة عمليات المشافي.",
+        "Hospital_system.webp"
+      ],
+      [
+        "Welcome",
+        "Multi-store online shopping in one application.",
+        "ويلكم: التسوق الإلكتروني متعدد المتاجر في تطبيق واحد.",
+        "welcome.webp"
+      ]
+    ]
+  }
+]
